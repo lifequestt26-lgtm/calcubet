@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Calculadora Trade: Lucro no Gol / Cobertura no 0x0</title>
     
+    <!-- Configurações para transformar em Aplicativo (PWA) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -145,10 +146,37 @@
         .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
         .login-card input { text-align: center; font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 15px; }
         .error-msg { color: #f87171; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+        /* Botão de Instalação PWA */
+        .install-banner {
+            display: none;
+            background: #1e293b;
+            border: 1px solid #3b82f6;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .install-info { font-size: 0.85rem; color: #fff; }
+        .install-info strong { display: block; font-size: 0.9rem; color: #3b82f6; }
+        .install-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: auto;
+        }
     </style>
 </head>
 <body>
 
+<!-- TELA DE LOGIN -->
 <div id="loginScreen">
     <div class="login-card">
         <h2>Área Restrita</h2>
@@ -159,7 +187,18 @@
     </div>
 </div>
 
+<!-- CONTEÚDO PRINCIPAL -->
 <div class="app-container" id="appContent" style="display: none;">
+    
+    <!-- BANNER DE INSTALAÇÃO (SÓ APARECE SE NÃO ESTIVER INSTALADO) -->
+    <div id="installBanner" class="install-banner">
+        <div class="install-info">
+            <strong>Instalar no Celular</strong>
+            Acesse mais rápido direto da tela inicial.
+        </div>
+        <button id="btnInstalar" class="install-btn" onclick="executarInstalacao()">Instalar</button>
+    </div>
+
     <header>
         <h1>Calculadora Trade: Alvo no Gol</h1>
         <p>Insira a Responsabilidade do Lay e o app calcula a defesa exata</p>
@@ -232,6 +271,7 @@
     var sLay = 0;
     var s0x0Calculado = 0;
     var custoTotal = 0;
+    var deparadoInstalacao = null;
 
     // Lógica que busca a senha em tempo real direto do arquivo config.json
     async function verificarSenha() {
@@ -239,7 +279,6 @@
         const errorMsg = document.getElementById('errorMsg');
         
         try {
-            // Usa cache-busting (?v=...) para garantir que o celular puxe a senha nova alterada no github
             const resposta = await fetch('config.json?v=' + Math.random());
             const dados = await resposta.json();
             
@@ -247,24 +286,75 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appContent').style.display = 'block';
                 errorMsg.style.display = 'none';
+                
+                // Verifica se deve exibir o banner de instalação após logar
+                checarInstalacaoPWA();
             } else {
                 errorMsg.style.display = 'block';
             }
         } catch (erro) {
             console.error("Erro ao validar senha online:", erro);
-            // Fallback caso falte rede temporariamente
             if (inputSenha === "2026") {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appContent').style.display = 'block';
+                checarInstalacaoPWA();
             } else {
                 alert("Não foi possível conectar ao servidor para validar o acesso.");
             }
         }
     }
 
-    // Permite fazer o login pressionando a tecla Enter
     document.getElementById('senhaInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') verificarSenha();
+    });
+
+    // LÓGICA DE INSTALAÇÃO DO APP (PWA)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Previne que o navegador abra o aviso padrão do Android sozinho
+        e.preventDefault();
+        deparadoInstalacao = e;
+        
+        // Se o app não estiver em modo standalone (já instalado), mostra o botão customizado
+        if (!window.matchMedia('(display-mode: standalone)').matches) {
+            document.getElementById('installBanner').style.display = 'flex';
+        }
+    });
+
+    function checarInstalacaoPWA() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+        if (!isStandalone) {
+            // No iOS o evento 'beforeinstallprompt' não existe, mas exibimos o banner com instrução guiada
+            if (isIOS) {
+                document.getElementById('installBanner').style.display = 'flex';
+            }
+        }
+    }
+
+    function executarInstalacao() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        if (isIOS) {
+            alert("No iPhone (iOS):\n\n1. Clique no botão de Compartilhar (quadrado com seta para cima embaixo na tela).\n2. Role as opções para baixo e clique em 'Adicionar à Tela de Início'.");
+        } else if (deparadoInstalacao) {
+            deparadoInstalacao.prompt();
+            deparadoInstalacao.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuário aceitou a instalação.');
+                    document.getElementById('installBanner').style.display = 'none';
+                }
+                deparadoInstalacao = null;
+            });
+        } else {
+            alert("Para instalar este app, clique nos 3 pontinhos do navegador e selecione 'Instalar aplicativo' ou 'Adicionar à tela inicial'.");
+        }
+    }
+
+    // Monitora se o app acabou de ser instalado para esconder o botão na hora
+    window.addEventListener('appinstalled', () => {
+        console.log('App instalado com sucesso!');
+        document.getElementById('installBanner').style.display = 'none';
     });
 
     function calcularEstrategiaFocadaNoGol() {
@@ -309,7 +399,7 @@
         var lucroBrutoNoLay = sLay - valorCashOutLay;
         var lucroLiquidoReal = lucroBrutoNoLay - s0x0Calculado;
 
-        divResultado.style.display = 'block';
+        divResultado.style.block ? divResultado.style.block : divResultado.style.display = 'block';
 
         if(lucroLiquidoReal >= 0) {
             divResultado.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
@@ -324,12 +414,11 @@
         }
     }
 
-    // Inicializa o Service Worker para habilitar o recurso de Instalação (PWA)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('PWA carregado com sucesso!', reg))
-                .catch(err => console.error('Falha no PWA', err));
+                .then(reg => console.log('PWA ativo!', reg))
+                .catch(err => console.error('Erro PWA', err));
         });
     }
 </script>
