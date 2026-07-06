@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Calculadora Trade Pro</title>
     
-    <!-- Meta tags obrigatórias para iPhone (iOS) ser instalável e tela cheia -->
+    <!-- Configurações para o iPhone (iOS) reconhecer como App e carregar o Ícone -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TradePro">
-    <link class="pwa-icon" rel="apple-touch-icon" href="https://img.icons8.com/fluent/512/calculator.png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/68X6X8X/logo-trade-pro.png">
     
-    <!-- Manifesto Dinâmico para Android e iOS (Injetado via Data URL) -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Calculadora%20Trade%20Pro%22%2C%22short_name%22%3A%22TradePro%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Ffluent%2F512%2Fcalculator.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%23png%22%7D%5D%7D">
+    <!-- Manifesto inline para Android e iOS instalarem com Nome e Ícone próprios -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Calculadora%20Trade%20Pro%22%2C%22short_name%22%3A%22TradePro%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fv5.airtableusercontent.com%2Fv3%2Fu%2F34%2F34%2F1731542400000%2F6b7b_Lg48m_hV-kK1-hWZQ%2FsN9jU_C_N3-m8fV_b8h-QA%2Ff5-Rz-Gv6M4Mh9pG1_H_7A%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
 
     <style>
         :root {
@@ -34,7 +34,6 @@
         }
         .app-container { max-width: 480px; margin: 0 auto; }
         
-        /* Telas */
         .screen { display: none; }
         .screen.active { display: block; }
         
@@ -47,12 +46,12 @@
         }
         
         header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
-        header img { width: 70px; height: 70px; margin-bottom: 10px; }
+        header img { width: 80px; height: 80px; margin-bottom: 10px; border-radius: 16px; }
         header h1 { font-size: 1.4rem; color: #fff; }
         
         .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         label { font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-        input, select {
+        input {
             background: #0f172a; border: 1px solid #475569; border-radius: 6px;
             padding: 12px; color: #fff; font-size: 1rem; width: 100%;
         }
@@ -67,9 +66,7 @@
         
         .btn-whatsapp { background-color: #25d366; color: white; text-decoration: none; display: block; text-align: center; padding: 14px; border-radius: 6px; font-weight: bold; margin-top: 15px; }
         .btn-whatsapp span { display: block; font-size: 0.8rem; font-weight: normal; opacity: 0.9; margin-top: 2px; }
-        .btn-admin-toggle { background: transparent; color: var(--text-muted); border: 1px dashed #475569; margin-top: 15px; padding: 8px; font-size: 0.8rem; }
         
-        /* Layout da calculadora */
         .input-row { display: flex; gap: 10px; margin-bottom: 12px; }
         .stake-box { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
         .stake-box.lay { border-left-color: var(--lay-color); }
@@ -82,17 +79,9 @@
         .profit-alert { margin-top: 10px; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; font-size: 1.05rem; }
         
         .user-badge { text-align: center; font-size: 0.8rem; color: var(--gold); margin-bottom: 15px; font-weight: bold; }
-        .admin-list { background: #0f172a; padding: 10px; border-radius: 6px; max-height: 200px; overflow-y: auto; font-size: 0.85rem; margin-top: 10px; }
-        .admin-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #334155; }
-        .admin-item button { width: auto; padding: 2px 8px; background: #ef4444; font-size: 0.75rem; }
-
-        /* Estilos do Guia de Passos */
-        .tutorial-steps { margin-top: 10px; }
         .step-item { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
-        .step-title { font-weight: bold; font-size: 0.9rem; color: var(--gold); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .step-title { font-weight: bold; font-size: 0.9rem; color: var(--gold); margin-bottom: 4px; }
         .step-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; }
-
-        /* Banner de Créditos Gratuitos */
         .credit-banner { background: rgba(234, 179, 8, 0.15); border: 1px dashed var(--gold); border-radius: 6px; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: bold; color: var(--gold); margin-bottom: 15px; }
     </style>
 </head>
@@ -100,99 +89,53 @@
 
 <div class="app-container">
 
-    <!-- TELA 1: LOGIN -->
+    <!-- TELA 1: IDENTIFICAÇÃO ÚNICA -->
     <div id="screenLogin" class="screen active">
         <header>
             <img src="https://img.icons8.com/fluent/512/calculator.png" alt="Logo">
-            <h1>Trade Pro: Login</h1>
+            <h1>Calculadora Trade Pro</h1>
         </header>
         <div class="card">
-            <div id="msgDispositivoVinculado" style="display:none; color: var(--lay-color); font-size:0.8rem; text-align:center; margin-bottom:12px; font-weight:bold;">
-                🔒 Este celular está vinculado a outra conta.
-            </div>
+            <div id="msgDispositivoVinculado" style="display:none; color: var(--gold); font-size:0.85rem; text-align:center; margin-bottom:15px; font-weight:bold;"></div>
             <div class="input-group">
-                <label>E-mail Cadastrado</label>
+                <label>Digite seu melhor E-mail</label>
                 <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com">
             </div>
-            <div class="input-group">
-                <label>Senha de Acesso <span>(Deixe em branco para teste grátis)</span></label>
-                <input type="password" id="loginSenha" placeholder="Digite sua senha se for Premium">
-            </div>
-            <button onclick="autenticarUsuario()">Entrar no Aplicativo</button>
+            <button onclick="acessarCalculadora()">Iniciar Teste Gratuito</button>
             
-            <a href="https://wa.me/5579999055301?text=Olá,%20gostaria%20de%20contratar%20o%20plano%20Premium%20da%20Calculadora!" class="btn-whatsapp" target="_blank">
-                🚀 Contratar Plano Premium
-                <span>Semanal: R$ 4,99 | Mensal: R$ 17,99</span>
+            <a href="https://wa.me/5579999055301?text=Olá!%20Esgotei%20minhas%20entradas%20gratuitas%20e%20gostaria%20de%20comprar%20o%20acesso%20ilimitado!" class="btn-whatsapp" target="_blank">
+                💬 Ativar Versão Ilimitada
+                <span>Fale diretamente conosco via WhatsApp</span>
             </a>
-            
-            <button class="btn-admin-toggle" onclick="irParaAdmin()">Acessar Painel ADM</button>
         </div>
     </div>
 
-    <!-- TELA 2: PAINEL ADMINISTRADOR -->
-    <div id="screenAdmin" class="screen">
-        <header>
-            <h1>Painel do Administrador</h1>
-            <p>Gerenciamento de Assinaturas</p>
-        </header>
-        <div class="card">
-            <button onclick="abrirCalculadoraComoAdmin()" style="background-color: var(--primary); margin-bottom: 20px;">🧮 Abrir Calculadora em Modo ADM (Ilimitada)</button>
-            
-            <h3>Cadastrar Novo Cliente</h3>
-            <div class="input-group" style="margin-top:10px;">
-                <label>E-mail do Cliente</label>
-                <input type="email" id="admClientEmail" placeholder="cliente@email.com">
-            </div>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Tipo de Plano</label>
-                    <select id="admPlanoTipo" onchange="atualizarDicaSenha()">
-                        <option value="semanal">Semanal (R$ 4,99)</option>
-                        <option value="mensal">Mensal (R$ 17,99)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label id="lblSufixo">Senha (2 dígitos)</label>
-                    <input type="text" id="admSenhaSufixo" placeholder="Ex: 12">
-                </div>
-            </div>
-            <button onclick="cadastrarCliente()" style="background-color: var(--green);">Liberar Acesso do Cliente</button>
-            
-            <h4 style="margin-top: 20px; font-size:0.9rem;">Clientes Ativos no Sistema:</h4>
-            <div id="listaClientes" class="admin-list"></div>
-            
-            <button onclick="deslogar()" style="background-color: #475569; margin-top: 15px;">Sair do Painel ADM</button>
-        </div>
-    </div>
-
-    <!-- TELA 3: CALCULADORA -->
+    <!-- TELA 2: CALCULADORA -->
     <div id="screenApp" class="screen">
         <header style="padding: 10px 0; margin-bottom: 5px;">
-            <h1>Calculadora Trade: Alvo no Gol</h1>
-            <div class="user-badge" id="txtUserBadge">Acesso Ativo</div>
+            <h1>Alvo no Gol</h1>
+            <div class="user-badge">Acesso Liberado</div>
         </header>
 
-        <!-- Banner Dinâmico de Créditos Disponíveis -->
-        <div id="bannerCreditos" class="credit-banner" style="display:none;">
-            🎁 Você está na versão de teste! Restam <span id="numCreditos">5</span> entradas grátis.
+        <div id="bannerCreditos" class="credit-banner">
+            🎁 Modo de teste: Você tem <span id="numCreditos">5</span> cálculos restantes neste celular.
         </div>
 
+        <!-- Guia de Operação -->
         <div class="card" style="border: 1px solid rgba(234, 179, 8, 0.3);">
-            <h3 style="color: var(--gold); font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;">
-                📖 Guia de Operação: Alvo no Gol
-            </h3>
+            <h3 style="color: var(--gold); font-size: 1rem; margin-bottom: 8px;">📖 Guia de Operação Rápido</h3>
             <div class="tutorial-steps">
                 <div class="step-item">
-                    <div class="step-title">Passo 1: Fazer as Entradas (Pré-Jogo)</div>
-                    <div class="step-desc">Antes do juiz apitar, coloque os dados na calculadora. Na sua corretora de intercâmbio (Bolsa), faça o <strong>LAY EMPATE</strong> na ODD correspondente. Logo em seguida, faça o <strong>BACK 0x0</strong> apostando o valor exato da Stake de Defesa calculada aqui.</div>
+                    <div class="step-title">Passo 1: Entradas Pré-Jogo</div>
+                    <div class="step-desc">Na Bolsa de apostas, faça o <strong>LAY EMPATE</strong>. Depois, faça o <strong>BACK 0x0</strong> com o valor exato da "Stake de Defesa" calculada abaixo.</div>
                 </div>
                 <div class="step-item" style="border-left-color: var(--green);">
-                    <div class="step-title">Passo 2: Momento do Gol (A Saída Concretizada)</div>
-                    <div class="step-desc">Assim que sair um gol na partida (seja de qualquer um dos lados), a sua proteção no 0x0 é perdida, mas a ODD do Empate sofrerá uma subida forte instantânea. Digite a nova ODD no campo roxo abaixo.</div>
+                    <div class="step-title">Passo 2: Após o Gol</div>
+                    <div class="step-desc">Quando sair um gol na partida, a proteção do 0x0 cai, mas a ODD do Empate subirá muito. Digite a nova ODD no campo roxo.</div>
                 </div>
                 <div class="step-item" style="border-left-color: #ef4444;">
-                    <div class="step-title">Passo 3: Finalizar com Lucro no Cash Out</div>
-                    <div class="step-desc">Aguarde a ODD do mercado atingir a zona de lucro confirmada pelo app. Clique em <strong>Cash Out</strong> no mercado de Empate para recolher os lucros e travar o ganho da operação, independente de como o jogo termine!</div>
+                    <div class="step-title">Passo 3: Lucro no Cash Out</div>
+                    <div class="step-desc">Assim que o aplicativo acusar a zona verde de lucro, clique em <strong>Cash Out</strong> na sua corretora para garantir seu ganho.</div>
                 </div>
             </div>
         </div>
@@ -215,7 +158,7 @@
                     <input type="number" id="odd0x0" value="18.5" step="0.5">
                 </div>
             </div>
-            <button onclick="executarCliqueCalculadora()">Calcular Defesa de Cobertura</button>
+            <button onclick="executarCalculoComDesconto()">Calcular Defesa de Cobertura</button>
         </div>
 
         <div id="outputZone" style="display: none;">
@@ -229,7 +172,6 @@
                 <div class="stake-box">
                     <span class="badge back">BACK (Azul)</span> Placar Correto 0x0
                     <div id="txtStake0x0">R$ 0,00</div>
-                    <small style="color: var(--text-muted); font-size: 0.75rem;">Esta é a sua defesa milimetricamente calculada.</small>
                 </div>
                 <div style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
                     Custo total travado na operação: <strong style="color:#fff;" id="txtCustoTotal">R$ 0,00</strong>
@@ -239,34 +181,29 @@
             <div class="card live-calc">
                 <h2>⚡ 3. Lucro no Cash Out (Após o Gol)</h2>
                 <div class="input-group" style="margin-bottom: 10px;">
-                    <label>Qual a nova ODD do Empate após o gol?</label>
+                    <label>Nova ODD do Empate após o gol:</label>
                     <input type="number" id="oddEmpateAtual" placeholder="Ex: 5.3" step="0.1" oninput="calcularSaidaGol()">
                 </div>
                 <div id="resultadoSaida" class="profit-alert" style="display:none;"></div>
             </div>
 
             <div class="card">
-                <h2>🛡️ Status de Cobertura Perfeita (Se terminar 0x0)</h2>
+                <h2>🛡️ Cobertura Perfeita (Caso termine 0x0)</h2>
                 <div style="font-size: 0.85rem; line-height: 1.4; color: var(--text-muted);">
-                    Se ninguém fizer gol e a partida terminar 0x0, a sua aposta de defesa vai retornar exatamente <strong style="color:var(--green);" id="txtRetorno0x0">R$ 0,00</strong>.<br><br>
-                    Esse valor paga a própria defesa e cobre os <span id="txtRespPerdida">R$ 0,00</span> da responsabilidade do Lay. Prejuízo zerado.
+                    Se o jogo terminar 0x0, sua aposta de proteção retorna <strong style="color:var(--green);" id="txtRetorno0x0">R$ 0,00</strong>, pagando o custo de proteção e cobrindo os <span id="txtRespPerdida">R$ 0,00</span> da responsabilidade do Lay. Risco zerado.
                 </div>
             </div>
         </div>
         
-        <button onclick="deslogar()" style="background-color: #475569; margin-top: 10px; padding: 10px;">Desconectar Conta</button>
+        <button onclick="desconectar()" style="background-color: #475569; margin-top: 10px; padding: 10px;">Mudar de Conta</button>
     </div>
 
 </div>
 
 <script>
-    // BANCO DE DADOS LOCAL AUTOMÁTICO
-    let clientesValidos = JSON.parse(localStorage.getItem('trade_pro_users')) || {};
-    
-    // VARIÁVEIS DE CONTROLE DE SESSÃO DO DISPOSITIVO
-    let emaiLogadoAtualmente = "";
-    let modoAdminAtivo = false;
+    let emailSessaoAtiva = "";
 
+    // Configuração silenciosa do Service Worker para passar nas regras de instalação (PWA)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => { for(let r of regs) r.unregister(); });
         const swCode = `self.addEventListener('fetch', function(e){});`;
@@ -274,13 +211,14 @@
         navigator.serviceWorker.register(URL.createObjectURL(blob));
     }
 
-    // Verifica na abertura se já existe um e-mail fixado neste celular
+    // Ao iniciar, puxa o e-mail se já estiver fixado nesse dispositivo
     window.addEventListener('DOMContentLoaded', () => {
-        const emailVinculado = localStorage.getItem('trade_pro_device_owner');
-        if (emailVinculado) {
-            document.getElementById('loginEmail').value = emailVinculado;
-            document.getElementById('msgDispositivoVinculado').style.display = 'block';
-            document.getElementById('msgDispositivoVinculado').innerText = `🔒 Aparelho vinculado ao e-mail: ${emailVinculado}`;
+        const donoDoCelular = localStorage.getItem('tp_device_email');
+        if (donoDoCelular) {
+            document.getElementById('loginEmail').value = donoDoCelular;
+            const msgBox = document.getElementById('msgDispositivoVinculado');
+            msgBox.style.display = 'block';
+            msgBox.innerText = `🔒 Aparelho vinculado ao e-mail: ${donoDoCelular}`;
         }
     });
 
@@ -290,206 +228,82 @@
         window.scrollTo(0,0);
     }
 
-    function autenticarUsuario() {
+    function acessarCalculadora() {
         const emailInput = document.getElementById('loginEmail').value.trim().toLowerCase();
-        const senhaInput = document.getElementById('loginSenha').value.trim();
-        const emailVinculado = localStorage.getItem('trade_pro_device_owner');
+        const donoDoCelular = localStorage.getItem('tp_device_email');
 
         if (!emailInput) {
-            alert("Por favor, preencha o campo de e-mail.");
+            alert("Insira um e-mail válido para entrar.");
             return;
         }
 
-        // 1. LOGIN ADMIN MASTER
-        if (emailInput === 'jefersoncarvalho252@gmail.com' && senhaInput === 'ben150718') {
-            modoAdminAtivo = true;
-            renderizarListaClientes();
-            alternarTela('screenAdmin');
+        // REGRA: Apenas 1 e-mail aceito por celular
+        if (donoDoCelular && donoDoCelular !== emailInput) {
+            alert(`Bloqueio: Este celular está vinculado permanentemente ao e-mail: ${donoDoCelular}`);
             return;
         }
 
-        // TRAVA: Bloqueia se o celular já pertence a outro e-mail e não é o admin
-        if (emailVinculado && emailVinculado !== emailInput) {
-            alert(`Este smartphone está restrito e só aceita o e-mail: ${emailVinculado}. Caso queira trocar de aparelho, fale com o suporte.`);
-            return;
+        // Se for o primeiro acesso, fixa este e-mail no dispositivo
+        if (!donoDoCelular) {
+            localStorage.setItem('tp_device_email', emailInput);
         }
 
-        modoAdminAtivo = false;
-        emaiLogadoAtualmente = emailInput;
+        emailSessaoAtiva = emailInput;
 
-        // 2. LOGIN PREMIUM CLIENTE
-        if (senhaInput !== "") {
-            if (clientesValidos[emailInput] && senhaInput === clientesValidos[emailInput].senhaCompleta) {
-                // Fixa o e-mail se for o primeiro acesso
-                if(!emailVinculado) localStorage.setItem('trade_pro_device_owner', emailInput);
-                
-                document.getElementById('txtUserBadge').innerText = "Premium: Plano " + clientesValidos[emailInput].plano.toUpperCase();
-                document.getElementById('bannerCreditos').style.display = 'none';
-                alternarTela('screenApp');
-                return;
-            }
-            alert("Senha Premium incorreta ou expirada. Deixe o campo em branco para usar o teste gratuito de 5 entradas.");
-            return;
-        }
-
-        // 3. ENTRADA NA VERSÃO GRÁTIS (SENHA EM BRANCO)
-        if(!emailVinculado) localStorage.setItem('trade_pro_device_owner', emailInput);
-        
-        let creditos = localStorage.getItem(`credits_${emailInput}`);
+        // Inicializa ou lê o saldo de 5 créditos gratuitos
+        let creditos = localStorage.getItem(`credits_${emailSessaoAtiva}`);
         if (creditos === null) {
             creditos = 5;
-            localStorage.setItem(`credits_${emailInput}`, creditos);
+            localStorage.setItem(`credits_${emailSessaoAtiva}`, creditos);
         } else {
             creditos = parseInt(creditos);
         }
 
-        document.getElementById('txtUserBadge').innerText = "Versão de Teste Gratuito";
         document.getElementById('numCreditos').innerText = creditos;
-        document.getElementById('bannerCreditos').style.display = 'block';
         alternarTela('screenApp');
     }
 
-    function irParaAdmin() {
-        const emailInput = document.getElementById('loginEmail').value.trim().toLowerCase();
-        const senhaInput = document.getElementById('loginSenha').value.trim();
-        
-        if (emailInput === 'jefersoncarvalho252@gmail.com' && senhaInput === 'ben150718') {
-            modoAdminAtivo = true;
-            renderizarListaClientes();
-            alternarTela('screenAdmin');
-        } else {
-            alert("Insira os dados de Admin Master no formulário principal de login para prosseguir.");
-        }
-    }
-
-    function abrirCalculadoraComoAdmin() {
-        document.getElementById('txtUserBadge').innerText = "Modo Administrador Ilimitado";
-        document.getElementById('bannerCreditos').style.display = 'none';
-        alternarTela('screenApp');
-    }
-
-    function atualizarDicaSenha() {
-        const tipo = document.getElementById('admPlanoTipo').value;
-        document.getElementById('lblSufixo').innerText = tipo === 'semanal' ? "Senha (2 dígitos)" : "Senha (4 dígitos)";
-        document.getElementById('admSenhaSufixo').placeholder = tipo === 'semanal' ? "Ex: 12" : "Ex: 1234";
-    }
-
-    function cadastrarCliente() {
-        const email = document.getElementById('admClientEmail').value.trim().toLowerCase();
-        const tipo = document.getElementById('admPlanoTipo').value;
-        const sufixo = document.getElementById('admSenhaSufixo').value.trim();
-
-        if (!email || !sufixo) {
-            alert("Por favor, preencha o e-mail do cliente e os dígitos da senha.");
-            return;
-        }
-        if (tipo === 'semanal' && sufixo.length !== 2) {
-            alert("A senha semanal deve ter exatamente 2 dígitos!"); return;
-        }
-        if (tipo === 'mensal' && sufixo.length !== 4) {
-            alert("A senha mensal deve ter exatamente 4 dígitos!"); return;
-        }
-
-        const senhaGerada = email + sufixo;
-
-        clientesValidos[email] = {
-            plano: tipo,
-            sufixo: sufixo,
-            senhaCompleta: senhaGerada
-        };
-
-        localStorage.setItem('trade_pro_users', JSON.stringify(clientesValidos));
-        renderizarListaClientes();
-
-        document.getElementById('admClientEmail').value = '';
-        document.getElementById('admSenhaSufixo').value = '';
-
-        alert(`Sucesso!\n\nCliente Cadastrado!\nPlano: ${tipo}\nSenha gerada: ${senhaGerada}\n\nVocê já pode enviar esses dados para o cliente acessar!`);
-    }
-
-    function removerCliente(email) {
-        if(confirm(`Deseja remover o acesso do cliente ${email}?`)) {
-            delete clientesValidos[email];
-            localStorage.setItem('trade_pro_users', JSON.stringify(clientesValidos));
-            renderizarListaClientes();
-        }
-    }
-
-    function renderizarListaClientes() {
-        const container = document.getElementById('listaClientes');
-        container.innerHTML = '';
-        const chaves = Object.keys(clientesValidos);
-        
-        if(chaves.length === 0) {
-            container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:10px;">Nenhum cliente ativo.</div>';
-            return;
-        }
-
-        chaves.forEach(email => {
-            const info = clientesValidos[email];
-            const preco = info.plano === 'semanal' ? 'R$ 4,99' : 'R$ 17,99';
-            container.innerHTML += `
-                <div class="admin-item">
-                    <div>
-                        <strong>${email}</strong><br>
-                        <span style="color:var(--gold); font-size:0.75rem;">Plano: ${info.plano.toUpperCase()} (${preco}) | Senha: ${info.senhaCompleta}</span>
-                    </div>
-                    <button onclick="removerCliente('${email}')">Excluir</button>
-                </div>
-            `;
-        });
-    }
-
-    function deslogar() {
-        document.getElementById('loginSenha').value = '';
-        modoAdminAtivo = false;
-        alternarTela('screenLogin');
-    }
-
-    // INTERCEPTADOR DE CLIQUE PARA VALIDAR CRÉDITOS DISPONÍVEIS
-    function executarCliqueCalculadora() {
-        if (modoAdminAtivo || (clientesValidos[emaiLogadoAtualmente])) {
-            // Admin ou premium calculam de forma livre
-            calcularEstrategiaFocadaNoGol();
-            return;
-        }
-
-        // Tratamento da versão gratuita
-        let creditos = parseInt(localStorage.getItem(`credits_${emaiLogadoAtualmente}`) || 0);
+    function executarCalculoComDesconto() {
+        let creditos = parseInt(localStorage.getItem(`credits_${emailSessaoAtiva}`) || 0);
 
         if (creditos <= 0) {
-            alert("Seu limite de 5 entradas de teste acabou! Contrate o Plano Premium via WhatsApp para continuar operando.");
-            deslogar();
+            alert("Suas 5 entradas de teste gratuito terminaram! Toque no botão do WhatsApp para comprar a licença ilimitada.");
+            desconectar();
             return;
         }
 
         creditos -= 1;
-        localStorage.setItem(`credits_${emaiLogadoAtualmente}`, creditos);
+        localStorage.setItem(`credits_${emailSessaoAtiva}`, creditos);
         document.getElementById('numCreditos').innerText = creditos;
 
-        calcularEstrategiaFocadaNoGol();
+        // Executa o cálculo matemático
+        calcularResultadosFinais();
     }
 
-    // MATEMÁTICA DA CALCULADORA TRADE
-    var rLay = 0, oEmpInicial = 0, o0x0 = 0, sLay = 0, s0x0Calculado = 0, custoTotal = 0;
+    function desconectar() {
+        alternarTela('screenLogin');
+    }
 
-    function calcularEstrategiaFocadaNoGol() {
+    // MATEMÁTICA INTEGRADA DO SISTEMA
+    let rLay = 0, oEmpInicial = 0, o0x0 = 0, sLay = 0, s0x0 = 0, custoTotal = 0;
+
+    function calcularResultadosFinais() {
         rLay = parseFloat(document.getElementById('respLayInput').value);
         oEmpInicial = parseFloat(document.getElementById('oddEmpateInicial').value);
         o0x0 = parseFloat(document.getElementById('odd0x0').value);
 
         if(isNaN(rLay) || isNaN(oEmpInicial) || isNaN(o0x0)) {
-            alert("Por favor, preencha todos os valores."); return;
+            alert("Complete todos os campos numéricos."); return;
         }
 
         sLay = rLay / (oEmpInicial - 1);
-        s0x0Calculado = rLay / (o0x0 - 1);
-        custoTotal = s0x0Calculado + rLay;
-        var retornoBruto0x0 = s0x0Calculado * o0x0;
+        s0x0 = rLay / (o0x0 - 1);
+        custoTotal = s0x0 + rLay;
+        let retornoBruto0x0 = s0x0 * o0x0;
 
         document.getElementById('txtRespLay').innerText = "R$ " + rLay.toFixed(2);
         document.getElementById('txtStakeLay').innerText = "R$ " + sLay.toFixed(2);
-        document.getElementById('txtStake0x0').innerText = "R$ " + s0x0Calculado.toFixed(2);
+        document.getElementById('txtStake0x0').innerText = "R$ " + s0x0.toFixed(2);
         document.getElementById('txtCustoTotal').innerText = "R$ " + custoTotal.toFixed(2);
         document.getElementById('txtRetorno0x0').innerText = "R$ " + retornoBruto0x0.toFixed(2);
         document.getElementById('txtRespPerdida').innerText = "R$ " + rLay.toFixed(2);
@@ -500,16 +314,16 @@
     }
 
     function calcularSaidaGol() {
-        var oddAtual = parseFloat(document.getElementById('oddEmpateAtual').value);
-        var divResultado = document.getElementById('resultadoSaida');
+        let oddAtual = parseFloat(document.getElementById('oddEmpateAtual').value);
+        let divResultado = document.getElementById('resultadoSaida');
 
         if(isNaN(oddAtual) || oddAtual <= 0) {
             divResultado.style.display = 'none'; return;
         }
 
-        var valorCashOutLay = (sLay * oEmpInicial) / oddAtual;
-        var lucroBrutoNoLay = sLay - valorCashOutLay;
-        var lucroLiquidoReal = lucroBrutoNoLay - s0x0Calculado;
+        let valorCashOutLay = (sLay * oEmpInicial) / oddAtual;
+        let lucroBrutoNoLay = sLay - valorCashOutLay;
+        let lucroLiquidoReal = lucroBrutoNoLay - s0x0;
 
         divResultado.style.display = 'block';
 
@@ -517,12 +331,12 @@
             divResultado.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
             divResultado.style.color = "#34d399";
             divResultado.style.border = "1px solid #10b981";
-            divResultado.innerHTML = "🟢 LUCRO DETECTADO APÓS O GOL!<br>Dê Cash Out para embolsar: +R$ " + lucroLiquidoReal.toFixed(2);
+            divResultado.innerHTML = "🟢 LUCRO DETECTADO APÓS O GOL!<br>Faça o Cash Out para garantir: +R$ " + lucroLiquidoReal.toFixed(2);
         } else {
             divResultado.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
             divResultado.style.color = "#f87171";
             divResultado.style.border = "1px solid #ef4444";
-            divResultado.innerHTML = "⚠️ A odd subiu pouco (Resultado atual: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a odd subir um pouco mais para pagar a defesa.</span>";
+            divResultado.innerHTML = "⚠️ Margem baixa (Resultado: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a ODD subir mais um pouco para absorver o custo da proteção.</span>";
         }
     }
 </script>
