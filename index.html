@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora Trade: Lucro no Gol / Cobertura no 0x0</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --lay-color: #ec4899;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --green: #10b981;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 15px;
+        }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #334155;
+        }
+        header h1 { font-size: 1.3rem; color: #fff; }
+        header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
+        .card h2 { font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .input-group { flex: 1; display: flex; flex-direction: column; }
+        label { font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--text-muted); }
+        input {
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 10px;
+            color: #fff;
+            font-size: 1rem;
+            width: 100%;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .output-zone { display: none; }
+        
+        .stake-box {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        .stake-box.lay { border-left-color: var(--lay-color); }
+        .stake-box div { font-size: 1.15rem; font-weight: bold; margin-top: 3px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .badge.back { background: var(--primary); }
+        .badge.lay-bg { background: var(--lay-color); }
+        
+        .scenarios { font-size: 0.85rem; line-height: 1.4; color: var(--text-muted); }
+        .scenarios strong { color: var(--text); }
+        .scenario-item { margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; }
+        
+        .live-calc {
+            background: #1e1b4b;
+            border: 1px solid #4338ca;
+        }
+        .live-calc input { background: #1e293b; border-color: #6366f1; }
+        .profit-alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>Calculadora Trade: Alvo no Gol</h1>
+        <p>Insira a Responsabilidade do Lay e o app calcula a defesa exata</p>
+    </header>
+
+    <div class="card">
+        <h2>1. Valores Iniciais (Antes do Jogo)</h2>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Responsabilidade do Lay (R$)</label>
+                <input type="number" id="respLayInput" value="126.41" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Odd do Lay Empate</label>
+                <input type="number" id="oddEmpateInicial" value="3.90" step="0.1">
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Odd do Placar 0x0</label>
+                <input type="number" id="odd0x0" value="18.5" step="0.5">
+            </div>
+        </div>
+        <button onclick="calcularEstrategiaFocadaNoGol()">Calcular Defesa de Cobertura</button>
+    </div>
+
+    <div id="outputZone" class="output-zone">
+        <div class="card">
+            <h2>2. Entradas Calculadas para a Bolsa</h2>
+            <div class="stake-box lay">
+                <span class="badge lay-bg">LAY (Rosa)</span> Mercado de Empate
+                <div>Responsabilidade: <span id="txtRespLay">R$ 0,00</span></div>
+                <div style="font-size: 0.9rem; font-weight: normal; margin-top:2px;">Stake (Valor a Ganhar): <strong id="txtStakeLay">R$ 0,00</strong></div>
+            </div>
+            <div class="stake-box">
+                <span class="badge back">BACK (Azul)</span> Placar Correto 0x0
+                <div id="txtStake0x0">R$ 0,00</div>
+                <small style="color: var(--text-muted); font-size: 0.75rem;">Esta é a sua defesa milimetricamente calculada.</small>
+            </div>
+            <div style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
+                Custo total travado na operação: <strong style="color:#fff;" id="txtCustoTotal">R$ 0,00</strong>
+            </div>
+        </div>
+
+        <div class="card live-calc">
+            <h2>⚡ 3. Lucro no Cash Out (Após o Gol)</h2>
+            <div class="input-group" style="margin-bottom: 10px;">
+                <label>Qual a nova ODD do Empate após o gol?</label>
+                <input type="number" id="oddEmpateAtual" placeholder="Ex: 5.3" step="0.1" oninput="calcularSaidaGol()">
+            </div>
+            <div id="resultadoSaida" class="profit-alert" style="display:none;"></div>
+        </div>
+
+        <div class="card">
+            <h2>🛡️ Status de Cobertura Perfeita (Se terminar 0x0)</h2>
+            <div class="scenarios">
+                <div class="scenario-item" style="border:none; padding:0; margin:0;">
+                    Se ninguém fizer gol e a partida terminar 0x0, a sua aposta de defesa vai retornar exatamente <strong style="color:var(--green);" id="txtRetorno0x0">R$ 0,00</strong>.<br><br>
+                    Esse valor paga exatamente os R$ da própria defesa e cobre os <span id="txtRespPerdida">R$ 0,00</span> da responsabilidade que você perdeu no Lay. Você sai rigorosamente com <strong>R$ 0,00 de prejuízo (100% Coberto)</strong>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // SCRIPT ADICIONAL: Remove registros antigos de Service Workers para limpar o erro
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    }
+
+    var rLay = 0;
+    var oEmpInicial = 0;
+    var o0x0 = 0;
+    var sLay = 0;
+    var s0x0Calculado = 0;
+    var custoTotal = 0;
+
+    function calcularEstrategiaFocadaNoGol() {
+        rLay = parseFloat(document.getElementById('respLayInput').value);
+        oEmpInicial = parseFloat(document.getElementById('oddEmpateInicial').value);
+        o0x0 = parseFloat(document.getElementById('odd0x0').value);
+
+        if(isNaN(rLay) || isNaN(oEmpInicial) || isNaN(o0x0)) {
+            alert("Por favor, preencha todos os valores.");
+            return;
+        }
+
+        sLay = rLay / (oEmpInicial - 1);
+        s0x0Calculado = rLay / (o0x0 - 1);
+        custoTotal = s0x0Calculado + rLay;
+        var retornoBruto0x0 = s0x0Calculado * o0x0;
+
+        document.getElementById('txtRespLay').innerText = "R$ " + rLay.toFixed(2);
+        document.getElementById('txtStakeLay').innerText = "R$ " + sLay.toFixed(2);
+        document.getElementById('txtStake0x0').innerText = "R$ " + s0x0Calculado.toFixed(2);
+        document.getElementById('txtCustoTotal').innerText = "R$ " + custoTotal.toFixed(2);
+        document.getElementById('txtRetorno0x0').innerText = "R$ " + retornoBruto0x0.toFixed(2);
+        document.getElementById('txtRespPerdida').innerText = "R$ " + rLay.toFixed(2);
+
+        document.getElementById('oddEmpateAtual').value = '';
+        document.getElementById('resultadoSaida').style.display = 'none';
+
+        document.getElementById('outputZone').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('outputZone').offsetTop, behavior: 'smooth' });
+    }
+
+    function calcularSaidaGol() {
+        var oddAtual = parseFloat(document.getElementById('oddEmpateAtual').value);
+        var divResultado = document.getElementById('resultadoSaida');
+
+        if(isNaN(oddAtual) || oddAtual <= 0) {
+            divResultado.style.display = 'none';
+            return;
+        }
+
+        var valorCashOutLay = (sLay * oEmpInicial) / oddAtual;
+        var lucroBrutoNoLay = sLay - valorCashOutLay;
+        var lucroLiquidoReal = lucroBrutoNoLay - s0x0Calculado;
+
+        divResultado.style.display = 'block';
+
+        if(lucroLiquidoReal >= 0) {
+            divResultado.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
+            divResultado.style.color = "#34d399";
+            divResultado.style.border = "1px solid #10b981";
+            divResultado.innerHTML = "🟢 LUCRO DETECTADO APÓS O GOL!<br>Dê Cash Out para embolsar: +R$ " + lucroLiquidoReal.toFixed(2);
+        } else {
+            divResultado.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+            divResultado.style.color = "#f87171";
+            divResultado.style.border = "1px solid #ef4444";
+            divResultado.innerHTML = "⚠️ A odd subiu pouco (Resultado atual: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a odd do Empate se movimentar um pouco mais para pagar a defesa.</span>";
+        }
+    }
+</script>
+
+</body>
+</html>
