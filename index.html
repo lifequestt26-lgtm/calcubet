@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora Trade: Lucro no Gol / Cobertura no 0x0</title>
+    <title>Calculadora Trade: Alvo no Gol</title>
+    
+    <!-- Configuração do PWA injetada direto no HTML (Evita erro de manifest faltando) -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Calculadora%20Trade%20Alvo%20no%20Gol%22%2C%22short_name%22%3A%22TradeGol%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22orientation%22%3A%22portrait%22%7D">
+    
     <style>
         :root {
             --primary: #2563eb;
@@ -121,7 +125,7 @@
 <div class="app-container">
     <header>
         <h1>Calculadora Trade: Alvo no Gol</h1>
-        <p>Insira a Responsabilidade do Lay e o app calcula a defesa exata</p>
+        <p>Insira a Responsabilidade do Lay e descubra a defesa exata</p>
     </header>
 
     <div class="card">
@@ -185,7 +189,7 @@
 </div>
 
 <script>
-    // SCRIPT ADICIONAL: Remove registros antigos de Service Workers para limpar o erro
+    // DESTRUTOR DE CACHE: Remove qualquer Service Worker travado de versões antigas
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for(let registration of registrations) {
@@ -211,8 +215,12 @@
             return;
         }
 
+        // Descobre a stake com base na responsabilidade digitada
         sLay = rLay / (oEmpInicial - 1);
+        
+        // Equação de cobertura perfeita para o 0x0 pagar o Lay e a si próprio
         s0x0Calculado = rLay / (o0x0 - 1);
+        
         custoTotal = s0x0Calculado + rLay;
         var retornoBruto0x0 = s0x0Calculado * o0x0;
 
@@ -254,7 +262,7 @@
             divResultado.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
             divResultado.style.color = "#f87171";
             divResultado.style.border = "1px solid #ef4444";
-            divResultado.innerHTML = "⚠️ A odd subiu pouco (Resultado atual: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a odd do Empate se movimentar um pouco mais para pagar a defesa.</span>";
+            divResultado.innerHTML = "⚠️ A odd subiu pouco (Resultado atual: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a odd do Empate subir um pouco mais para pagar o custo da defesa.</span>";
         }
     }
 </script>
