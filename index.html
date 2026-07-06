@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora Trade Pro</title>
+    <title>Calculadora Trade: Lucro no Gol / Cobertura no 0x0</title>
     
-    <!-- Configurações para o iPhone (iOS) reconhecer como App e carregar o Ícone -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TradePro">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/68X6X8X/logo-trade-pro.png">
-    
-    <!-- Manifesto inline para Android e iOS instalarem com Nome e Ícone próprios -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Calculadora%20Trade%20Pro%22%2C%22short_name%22%3A%22TradePro%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fv5.airtableusercontent.com%2Fv3%2Fu%2F34%2F34%2F1731542400000%2F6b7b_Lg48m_hV-kK1-hWZQ%2FsN9jU_C_N3-m8fV_b8h-QA%2Ff5-Rz-Gv6M4Mh9pG1_H_7A%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="apple-touch-icon" href="icon.png">
 
     <style>
         :root {
@@ -23,7 +19,6 @@
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --green: #10b981;
-            --gold: #eab308;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -32,298 +27,287 @@
             color: var(--text);
             padding: 15px;
         }
-        .app-container { max-width: 480px; margin: 0 auto; }
-        
-        .screen { display: none; }
-        .screen.active { display: block; }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #334155;
+        }
+        header h1 { font-size: 1.3rem; color: #fff; }
+        header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
         
         .card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
         }
+        .card h2 { font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         
-        header { text-align: center; padding: 20px 0; margin-bottom: 15px; }
-        header img { width: 80px; height: 80px; margin-bottom: 10px; border-radius: 16px; }
-        header h1 { font-size: 1.4rem; color: #fff; }
-        
-        .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
-        label { font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .input-group { flex: 1; display: flex; flex-direction: column; }
+        label { font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--text-muted); }
         input {
-            background: #0f172a; border: 1px solid #475569; border-radius: 6px;
-            padding: 12px; color: #fff; font-size: 1rem; width: 100%;
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 10px;
+            color: #fff;
+            font-size: 1rem;
+            width: 100%;
         }
         input:focus { border-color: var(--primary); outline: none; }
         
         button {
-            width: 100%; background: var(--primary); color: #fff; border: none;
-            padding: 14px; border-radius: 6px; font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: background 0.2s;
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        button:hover { filter: brightness(1.1); }
         
-        .btn-whatsapp { background-color: #25d366; color: white; text-decoration: none; display: block; text-align: center; padding: 14px; border-radius: 6px; font-weight: bold; margin-top: 15px; }
-        .btn-whatsapp span { display: block; font-size: 0.8rem; font-weight: normal; opacity: 0.9; margin-top: 2px; }
+        .output-zone { display: none; }
         
-        .input-row { display: flex; gap: 10px; margin-bottom: 12px; }
-        .stake-box { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+        .stake-box {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+        }
         .stake-box.lay { border-left-color: var(--lay-color); }
         .stake-box div { font-size: 1.15rem; font-weight: bold; margin-top: 3px; }
-        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: #fff; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+        }
         .badge.back { background: var(--primary); }
         .badge.lay-bg { background: var(--lay-color); }
-        .live-calc { background: #1e1b4b; border: 1px solid #4338ca; }
-        .live-calc input { background: #1e293b; border-color: #6366f1; }
-        .profit-alert { margin-top: 10px; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; font-size: 1.05rem; }
         
-        .user-badge { text-align: center; font-size: 0.8rem; color: var(--gold); margin-bottom: 15px; font-weight: bold; }
-        .step-item { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--gold); }
-        .step-title { font-weight: bold; font-size: 0.9rem; color: var(--gold); margin-bottom: 4px; }
-        .step-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; }
-        .credit-banner { background: rgba(234, 179, 8, 0.15); border: 1px dashed var(--gold); border-radius: 6px; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: bold; color: var(--gold); margin-bottom: 15px; }
+        .scenarios { font-size: 0.85rem; line-height: 1.4; color: var(--text-muted); }
+        .scenarios strong { color: var(--text); }
+        .scenario-item { margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; }
+        
+        .live-calc {
+            background: #1e1b4b;
+            border: 1px solid #4338ca;
+        }
+        .live-calc input { background: #1e293b; border-color: #6366f1; }
+        .profit-alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        /* Estilos da Tela de Login/Bloqueio */
+        #loginScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .login-card h2 { margin-bottom: 10px; font-size: 1.4rem; }
+        .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .login-card input { text-align: center; font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 15px; }
+        .error-msg { color: #f87171; font-size: 0.85rem; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="loginScreen">
+    <div class="login-card">
+        <h2>Área Restrita</h2>
+        <p>Introduza a senha de acesso para utilizar a calculadora.</p>
+        <input type="password" id="senhaInput" placeholder="••••" pattern="[0-9]*" inputmode="numeric">
+        <button onclick="verificarSenha()">Entrar no App</button>
+        <div id="errorMsg" class="error-msg">Senha incorreta. Tente novamente.</div>
+    </div>
+</div>
 
-    <!-- TELA 1: IDENTIFICAÇÃO ÚNICA -->
-    <div id="screenLogin" class="screen active">
-        <header>
-            <img src="https://img.icons8.com/fluent/512/calculator.png" alt="Logo">
-            <h1>Calculadora Trade Pro</h1>
-        </header>
-        <div class="card">
-            <div id="msgDispositivoVinculado" style="display:none; color: var(--gold); font-size:0.85rem; text-align:center; margin-bottom:15px; font-weight:bold;"></div>
+<div class="app-container" id="appContent" style="display: none;">
+    <header>
+        <h1>Calculadora Trade: Alvo no Gol</h1>
+        <p>Insira a Responsabilidade do Lay e o app calcula a defesa exata</p>
+    </header>
+
+    <div class="card">
+        <h2>1. Valores Iniciais (Antes do Jogo)</h2>
+        <div class="input-row">
             <div class="input-group">
-                <label>Digite seu melhor E-mail</label>
-                <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com">
+                <label>Responsabilidade do Lay (R$)</label>
+                <input type="number" id="respLayInput" value="126.41" step="0.01">
             </div>
-            <button onclick="acessarCalculadora()">Iniciar Teste Gratuito</button>
-            
-            <a href="https://wa.me/5579999055301?text=Olá!%20Esgotei%20minhas%20entradas%20gratuitas%20e%20gostaria%20de%20comprar%20o%20acesso%20ilimitado!" class="btn-whatsapp" target="_blank">
-                💬 Ativar Versão Ilimitada
-                <span>Fale diretamente conosco via WhatsApp</span>
-            </a>
+            <div class="input-group">
+                <label>Odd do Lay Empate</label>
+                <input type="number" id="oddEmpateInicial" value="3.90" step="0.1">
+            </div>
         </div>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Odd do Placar 0x0</label>
+                <input type="number" id="odd0x0" value="18.5" step="0.5">
+            </div>
+        </div>
+        <button onclick="calcularEstrategiaFocadaNoGol()">Calcular Defesa de Cobertura</button>
     </div>
 
-    <!-- TELA 2: CALCULADORA -->
-    <div id="screenApp" class="screen">
-        <header style="padding: 10px 0; margin-bottom: 5px;">
-            <h1>Alvo no Gol</h1>
-            <div class="user-badge">Acesso Liberado</div>
-        </header>
-
-        <div id="bannerCreditos" class="credit-banner">
-            🎁 Modo de teste: Você tem <span id="numCreditos">5</span> cálculos restantes neste celular.
+    <div id="outputZone" class="output-zone">
+        <div class="card">
+            <h2>2. Entradas Calculadas para a Bolsa</h2>
+            <div class="stake-box lay">
+                <span class="badge lay-bg">LAY (Rosa)</span> Mercado de Empate
+                <div>Responsabilidade: <span id="txtRespLay">R$ 0,00</span></div>
+                <div style="font-size: 0.9rem; font-weight: normal; margin-top:2px;">Stake (Valor a Ganhar): <strong id="txtStakeLay">R$ 0,00</strong></div>
+            </div>
+            <div class="stake-box">
+                <span class="badge back">BACK (Azul)</span> Placar Correto 0x0
+                <div id="txtStake0x0">R$ 0,00</div>
+                <small style="color: var(--text-muted); font-size: 0.75rem;">Esta é a sua defesa milimetricamente calculada.</small>
+            </div>
+            <div style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
+                Custo total travado na operação: <strong style="color:#fff;" id="txtCustoTotal">R$ 0,00</strong>
+            </div>
         </div>
 
-        <!-- Guia de Operação -->
-        <div class="card" style="border: 1px solid rgba(234, 179, 8, 0.3);">
-            <h3 style="color: var(--gold); font-size: 1rem; margin-bottom: 8px;">📖 Guia de Operação Rápido</h3>
-            <div class="tutorial-steps">
-                <div class="step-item">
-                    <div class="step-title">Passo 1: Entradas Pré-Jogo</div>
-                    <div class="step-desc">Na Bolsa de apostas, faça o <strong>LAY EMPATE</strong>. Depois, faça o <strong>BACK 0x0</strong> com o valor exato da "Stake de Defesa" calculada abaixo.</div>
-                </div>
-                <div class="step-item" style="border-left-color: var(--green);">
-                    <div class="step-title">Passo 2: Após o Gol</div>
-                    <div class="step-desc">Quando sair um gol na partida, a proteção do 0x0 cai, mas a ODD do Empate subirá muito. Digite a nova ODD no campo roxo.</div>
-                </div>
-                <div class="step-item" style="border-left-color: #ef4444;">
-                    <div class="step-title">Passo 3: Lucro no Cash Out</div>
-                    <div class="step-desc">Assim que o aplicativo acusar a zona verde de lucro, clique em <strong>Cash Out</strong> na sua corretora para garantir seu ganho.</div>
-                </div>
+        <div class="card live-calc">
+            <h2>3. Lucro no Cash Out (Após o Gol)</h2>
+            <div class="input-group" style="margin-bottom: 10px;">
+                <label>Qual a nova ODD do Empate após o gol?</label>
+                <input type="number" id="oddEmpateAtual" placeholder="Ex: 5.3" step="0.1" oninput="calcularSaidaGol()">
             </div>
+            <div id="resultadoSaida" class="profit-alert" style="display:none;"></div>
         </div>
 
         <div class="card">
-            <h2>1. Valores Iniciais (Antes do Jogo)</h2>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Responsabilidade do Lay (R$)</label>
-                    <input type="number" id="respLayInput" value="126.41" step="0.01">
-                </div>
-                <div class="input-group">
-                    <label>Odd do Lay Empate</label>
-                    <input type="number" id="oddEmpateInicial" value="3.90" step="0.1">
-                </div>
-            </div>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Odd do Placar 0x0</label>
-                    <input type="number" id="odd0x0" value="18.5" step="0.5">
-                </div>
-            </div>
-            <button onclick="executarCalculoComDesconto()">Calcular Defesa de Cobertura</button>
-        </div>
-
-        <div id="outputZone" style="display: none;">
-            <div class="card">
-                <h2>2. Entradas Calculadas para a Bolsa</h2>
-                <div class="stake-box lay">
-                    <span class="badge lay-bg">LAY (Rosa)</span> Mercado de Empate
-                    <div>Responsabilidade: <span id="txtRespLay">R$ 0,00</span></div>
-                    <div style="font-size: 0.9rem; font-weight: normal; margin-top:2px;">Stake (Valor a Ganhar): <strong id="txtStakeLay">R$ 0,00</strong></div>
-                </div>
-                <div class="stake-box">
-                    <span class="badge back">BACK (Azul)</span> Placar Correto 0x0
-                    <div id="txtStake0x0">R$ 0,00</div>
-                </div>
-                <div style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
-                    Custo total travado na operação: <strong style="color:#fff;" id="txtCustoTotal">R$ 0,00</strong>
-                </div>
-            </div>
-
-            <div class="card live-calc">
-                <h2>⚡ 3. Lucro no Cash Out (Após o Gol)</h2>
-                <div class="input-group" style="margin-bottom: 10px;">
-                    <label>Nova ODD do Empate após o gol:</label>
-                    <input type="number" id="oddEmpateAtual" placeholder="Ex: 5.3" step="0.1" oninput="calcularSaidaGol()">
-                </div>
-                <div id="resultadoSaida" class="profit-alert" style="display:none;"></div>
-            </div>
-
-            <div class="card">
-                <h2>🛡️ Cobertura Perfeita (Caso termine 0x0)</h2>
-                <div style="font-size: 0.85rem; line-height: 1.4; color: var(--text-muted);">
-                    Se o jogo terminar 0x0, sua aposta de proteção retorna <strong style="color:var(--green);" id="txtRetorno0x0">R$ 0,00</strong>, pagando o custo de proteção e cobrindo os <span id="txtRespPerdida">R$ 0,00</span> da responsabilidade do Lay. Risco zerado.
+            <h2>Status de Cobertura Perfeita (Se terminar 0x0)</h2>
+            <div class="scenarios">
+                <div class="scenario-item" style="border:none; padding:0; margin:0;">
+                    Se ninguém fizer gol e a partida terminar 0x0, a sua aposta de defesa vai retornar exatamente <strong style="color:var(--green);" id="txtRetorno0x0">R$ 0,00</strong>.<br><br>
+                    Esse valor paga exatamente os R$ da própria defesa e cobre os <span id="txtRespPerdida">R$ 0,00</span> da responsabilidade que você perdeu no Lay. Você sai rigorosamente com <strong>R$ 0,00 de prejuízo (100% Coberto)</strong>.
                 </div>
             </div>
         </div>
-        
-        <button onclick="desconectar()" style="background-color: #475569; margin-top: 10px; padding: 10px;">Mudar de Conta</button>
     </div>
-
 </div>
 
 <script>
-    let emailSessaoAtiva = "";
+    var rLay = 0;
+    var oEmpInicial = 0;
+    var o0x0 = 0;
+    var sLay = 0;
+    var s0x0Calculado = 0;
+    var custoTotal = 0;
 
-    // Configuração silenciosa do Service Worker para passar nas regras de instalação (PWA)
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => { for(let r of regs) r.unregister(); });
-        const swCode = `self.addEventListener('fetch', function(e){});`;
-        const blob = new Blob([swCode], {type: 'application/javascript'});
-        navigator.serviceWorker.register(URL.createObjectURL(blob));
+    // Lógica que busca a senha em tempo real direto do arquivo config.json
+    async function verificarSenha() {
+        const inputSenha = document.getElementById('senhaInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+        
+        try {
+            // Usa cache-busting (?v=...) para garantir que o celular puxe a senha nova alterada no github
+            const resposta = await fetch('config.json?v=' + Math.random());
+            const dados = await resposta.json();
+            
+            if (inputSenha === dados.senha.toString()) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                errorMsg.style.display = 'none';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        } catch (erro) {
+            console.error("Erro ao validar senha online:", erro);
+            // Fallback caso falte rede temporariamente
+            if (inputSenha === "2026") {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+            } else {
+                alert("Não foi possível conectar ao servidor para validar o acesso.");
+            }
+        }
     }
 
-    // Ao iniciar, puxa o e-mail se já estiver fixado nesse dispositivo
-    window.addEventListener('DOMContentLoaded', () => {
-        const donoDoCelular = localStorage.getItem('tp_device_email');
-        if (donoDoCelular) {
-            document.getElementById('loginEmail').value = donoDoCelular;
-            const msgBox = document.getElementById('msgDispositivoVinculado');
-            msgBox.style.display = 'block';
-            msgBox.innerText = `🔒 Aparelho vinculado ao e-mail: ${donoDoCelular}`;
-        }
+    // Permite fazer o login pressionando a tecla Enter
+    document.getElementById('senhaInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') verificarSenha();
     });
 
-    function alternarTela(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    function acessarCalculadora() {
-        const emailInput = document.getElementById('loginEmail').value.trim().toLowerCase();
-        const donoDoCelular = localStorage.getItem('tp_device_email');
-
-        if (!emailInput) {
-            alert("Insira um e-mail válido para entrar.");
-            return;
-        }
-
-        // REGRA: Apenas 1 e-mail aceito por celular
-        if (donoDoCelular && donoDoCelular !== emailInput) {
-            alert(`Bloqueio: Este celular está vinculado permanentemente ao e-mail: ${donoDoCelular}`);
-            return;
-        }
-
-        // Se for o primeiro acesso, fixa este e-mail no dispositivo
-        if (!donoDoCelular) {
-            localStorage.setItem('tp_device_email', emailInput);
-        }
-
-        emailSessaoAtiva = emailInput;
-
-        // Inicializa ou lê o saldo de 5 créditos gratuitos
-        let creditos = localStorage.getItem(`credits_${emailSessaoAtiva}`);
-        if (creditos === null) {
-            creditos = 5;
-            localStorage.setItem(`credits_${emailSessaoAtiva}`, creditos);
-        } else {
-            creditos = parseInt(creditos);
-        }
-
-        document.getElementById('numCreditos').innerText = creditos;
-        alternarTela('screenApp');
-    }
-
-    function executarCalculoComDesconto() {
-        let creditos = parseInt(localStorage.getItem(`credits_${emailSessaoAtiva}`) || 0);
-
-        if (creditos <= 0) {
-            alert("Suas 5 entradas de teste gratuito terminaram! Toque no botão do WhatsApp para comprar a licença ilimitada.");
-            desconectar();
-            return;
-        }
-
-        creditos -= 1;
-        localStorage.setItem(`credits_${emailSessaoAtiva}`, creditos);
-        document.getElementById('numCreditos').innerText = creditos;
-
-        // Executa o cálculo matemático
-        calcularResultadosFinais();
-    }
-
-    function desconectar() {
-        alternarTela('screenLogin');
-    }
-
-    // MATEMÁTICA INTEGRADA DO SISTEMA
-    let rLay = 0, oEmpInicial = 0, o0x0 = 0, sLay = 0, s0x0 = 0, custoTotal = 0;
-
-    function calcularResultadosFinais() {
+    function calcularEstrategiaFocadaNoGol() {
         rLay = parseFloat(document.getElementById('respLayInput').value);
         oEmpInicial = parseFloat(document.getElementById('oddEmpateInicial').value);
         o0x0 = parseFloat(document.getElementById('odd0x0').value);
 
         if(isNaN(rLay) || isNaN(oEmpInicial) || isNaN(o0x0)) {
-            alert("Complete todos os campos numéricos."); return;
+            alert("Por favor, preencha todos os valores.");
+            return;
         }
 
         sLay = rLay / (oEmpInicial - 1);
-        s0x0 = rLay / (o0x0 - 1);
-        custoTotal = s0x0 + rLay;
-        let retornoBruto0x0 = s0x0 * o0x0;
+        s0x0Calculado = rLay / (o0x0 - 1);
+        custoTotal = s0x0Calculado + rLay;
+        var retornoBruto0x0 = s0x0Calculado * o0x0;
 
         document.getElementById('txtRespLay').innerText = "R$ " + rLay.toFixed(2);
         document.getElementById('txtStakeLay').innerText = "R$ " + sLay.toFixed(2);
-        document.getElementById('txtStake0x0').innerText = "R$ " + s0x0.toFixed(2);
+        document.getElementById('txtStake0x0').innerText = "R$ " + s0x0Calculado.toFixed(2);
         document.getElementById('txtCustoTotal').innerText = "R$ " + custoTotal.toFixed(2);
         document.getElementById('txtRetorno0x0').innerText = "R$ " + retornoBruto0x0.toFixed(2);
         document.getElementById('txtRespPerdida').innerText = "R$ " + rLay.toFixed(2);
 
         document.getElementById('oddEmpateAtual').value = '';
         document.getElementById('resultadoSaida').style.display = 'none';
+
         document.getElementById('outputZone').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('outputZone').offsetTop, behavior: 'smooth' });
     }
 
     function calcularSaidaGol() {
-        let oddAtual = parseFloat(document.getElementById('oddEmpateAtual').value);
-        let divResultado = document.getElementById('resultadoSaida');
+        var oddAtual = parseFloat(document.getElementById('oddEmpateAtual').value);
+        var divResultado = document.getElementById('resultadoSaida');
 
         if(isNaN(oddAtual) || oddAtual <= 0) {
-            divResultado.style.display = 'none'; return;
+            divResultado.style.display = 'none';
+            return;
         }
 
-        let valorCashOutLay = (sLay * oEmpInicial) / oddAtual;
-        let lucroBrutoNoLay = sLay - valorCashOutLay;
-        let lucroLiquidoReal = lucroBrutoNoLay - s0x0;
+        var valorCashOutLay = (sLay * oEmpInicial) / oddAtual;
+        var lucroBrutoNoLay = sLay - valorCashOutLay;
+        var lucroLiquidoReal = lucroBrutoNoLay - s0x0Calculado;
 
         divResultado.style.display = 'block';
 
@@ -331,13 +315,22 @@
             divResultado.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
             divResultado.style.color = "#34d399";
             divResultado.style.border = "1px solid #10b981";
-            divResultado.innerHTML = "🟢 LUCRO DETECTADO APÓS O GOL!<br>Faça o Cash Out para garantir: +R$ " + lucroLiquidoReal.toFixed(2);
+            divResultado.innerHTML = " LUCRO DETECTADO APÓS O GOL!<br>Dê Cash Out para embolsar: +R$ " + lucroLiquidoReal.toFixed(2);
         } else {
             divResultado.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
             divResultado.style.color = "#f87171";
             divResultado.style.border = "1px solid #ef4444";
-            divResultado.innerHTML = "⚠️ Margem baixa (Resultado: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a ODD subir mais um pouco para absorver o custo da proteção.</span>";
+            divResultado.innerHTML = " A odd subiu pouco (Resultado atual: -R$ " + Math.abs(lucroLiquidoReal).toFixed(2) + ")<br><span style='font-size:0.75rem; font-weight:normal;'>Aguarde a odd do Empate se movimentar um pouco mais para pagar a defesa.</span>";
         }
+    }
+
+    // Inicializa o Service Worker para habilitar o recurso de Instalação (PWA)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('PWA carregado com sucesso!', reg))
+                .catch(err => console.error('Falha no PWA', err));
+        });
     }
 </script>
 
